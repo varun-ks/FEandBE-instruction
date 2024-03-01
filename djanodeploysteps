@@ -1,0 +1,2392 @@
+Web link1:https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-22-04
+web link2: https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-22-04
+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
+vboxuser@VarunVM: su root
+vboxuser@VarunVM:~$ ssh root@10.0.2.15
+The authenticity of host '10.0.2.15 (10.0.2.15)' can't be established.
+ED25519 key fingerprint is SHA256:kIG/LfvabRXKiBUkXSe8IjzHDmdtfz4WT5TTAbofRYU.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.0.2.15' (ED25519) to the list of known hosts.
+root@10.0.2.15's password: 
+Permission denied, please try again.
+root@10.0.2.15's password: 
+Permission denied, please try again.
+root@10.0.2.15's password: 
+root@10.0.2.15: Permission denied (publickey,password).
+vboxuser@VarunVM:~$ su root
+Password: 
+root@VarunVM:/home/vboxuser# ssh root@10.0.2.15
+root@10.0.2.15's password: 
+Permission denied, please try again.
+root@10.0.2.15's password: 
+Permission denied, please try again.
+root@10.0.2.15's password: 
+
+root@VarunVM:/home/vboxuser# usermod -aG sudo vks
+root@VarunVM:/home/vboxuser# ufw app list
+Available applications:
+  CUPS
+  Nginx Full
+  Nginx HTTP
+  Nginx HTTPS
+  OpenSSH
+root@VarunVM:/home/vboxuser# ufw allow OpenSSH
+Rule added
+Rule added (v6)
+root@VarunVM:/home/vboxuser# ufw enable
+Firewall is active and enabled on system startup
+root@VarunVM:/home/vboxuser# ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+Nginx Full                 ALLOW       Anywhere                  
+8000                       ALLOW       Anywhere                  
+OpenSSH                    ALLOW       Anywhere                  
+Nginx Full (v6)            ALLOW       Anywhere (v6)             
+8000 (v6)                  ALLOW       Anywhere (v6)             
+OpenSSH (v6)               ALLOW       Anywhere (v6)             
+
+root@VarunVM:/home/vboxuser# ssh vks@10.0.2.15
+vks@10.0.2.15's password: 
+Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 6.2.0-26-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+Expanded Security Maintenance for Applications is not enabled.
+
+10 updates can be applied immediately.
+8 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+Last login: Sat Nov 18 21:50:59 2023 from 10.0.2.15
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+vks@VarunVM:~$ rsync --archive --chown=vks:vks ~/.ssh /home/vks
+vks@VarunVM:~$ ssh vks@10.0.2.15
+vks@10.0.2.15's password: 
+Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 6.2.0-26-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+Expanded Security Maintenance for Applications is not enabled.
+
+10 updates can be applied immediately.
+8 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+Last login: Sun Nov 19 13:43:35 2023 from 10.0.2.15
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+vks@VarunVM:~$ sudo apt update
+sudo apt install python3-venv python3-dev libpq-dev postgresql postgresql-contrib nginx curl
+[sudo] password for vks: 
+Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease            
+Hit:2 http://in.archive.ubuntu.com/ubuntu jammy InRelease
+Hit:3 http://in.archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:4 http://in.archive.ubuntu.com/ubuntu jammy-backports InRelease
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+6 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+nginx is already the newest version (1.18.0-6ubuntu14.4).
+The following packages were automatically installed and are no longer required:
+  gyp libc-ares2 libjs-events libjs-highlight.js libjs-inherits
+  libjs-is-typedarray libjs-psl libjs-source-map libjs-sprintf-js
+  libjs-typedarray-to-buffer libnode-dev libnode72 libuv1-dev node-abbrev
+  node-ansi-regex node-ansi-styles node-ansistyles node-are-we-there-yet
+  node-arrify node-asap node-asynckit node-balanced-match node-brace-expansion
+  node-chownr node-clean-yaml-object node-color-convert node-color-name
+  node-commander node-core-util-is node-decompress-response
+  node-delayed-stream node-delegates node-depd node-diff node-encoding
+  node-end-of-stream node-err-code node-escape-string-regexp node-fancy-log
+  node-foreground-child node-fs.realpath node-function-bind node-get-stream
+  node-glob node-growl node-has-flag node-has-unicode node-hosted-git-info
+  node-iconv-lite node-iferr node-imurmurhash node-indent-string node-inflight
+  node-inherits node-ini node-ip node-ip-regex node-is-buffer
+  node-is-plain-obj node-is-typedarray node-isarray node-isexe
+  node-json-parse-better-errors node-jsonparse node-kind-of
+  node-lodash-packages node-lowercase-keys node-lru-cache node-mimic-response
+  node-minimatch node-minimist node-minipass node-mute-stream node-negotiator
+  node-npm-bundled node-once node-osenv node-p-cancelable node-p-map
+  node-path-is-absolute node-process-nextick-args node-promise-inflight
+  node-promise-retry node-promzard node-pump node-quick-lru node-read
+  node-readable-stream node-resolve node-retry node-safe-buffer
+  node-set-blocking node-signal-exit node-slash node-slice-ansi
+  node-source-map node-spdx-correct node-spdx-exceptions
+  node-spdx-expression-parse node-spdx-license-ids node-sprintf-js
+  node-stealthy-require node-string-decoder node-supports-color
+  node-text-table node-time-stamp node-tmatch node-typedarray-to-buffer
+  node-universalify node-util-deprecate node-validate-npm-package-license
+  node-webidl-conversions node-whatwg-fetch node-wrappy node-yallist
+  nodejs-doc
+Use 'sudo apt autoremove' to remove them.
+The following additional packages will be installed:
+  libcommon-sense-perl libexpat1-dev libjs-jquery libjs-sphinxdoc
+  libjs-underscore libjson-perl libjson-xs-perl libllvm14 libpq5
+  libpython3-dev libpython3.10-dev libtypes-serialiser-perl postgresql-14
+  postgresql-client-14 postgresql-client-common postgresql-common
+  python3.10-dev sysstat zlib1g-dev
+Suggested packages:
+  postgresql-doc-14 postgresql-doc isag
+The following NEW packages will be installed:
+  curl libcommon-sense-perl libexpat1-dev libjs-jquery libjs-sphinxdoc
+  libjs-underscore libjson-perl libjson-xs-perl libllvm14 libpq-dev libpq5
+  libpython3-dev libpython3.10-dev libtypes-serialiser-perl postgresql
+  postgresql-14 postgresql-client-14 postgresql-client-common
+  postgresql-common postgresql-contrib python3-dev python3-venv python3.10-dev
+  sysstat zlib1g-dev
+0 upgraded, 25 newly installed, 0 to remove and 6 not upgraded.
+Need to get 48.9 MB of archives.
+After this operation, 187 MB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+Get:1 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 curl amd64 7.81.0-1ubuntu1.14 [194 kB]
+Get:2 http://in.archive.ubuntu.com/ubuntu jammy/main amd64 libcommon-sense-perl amd64 3.75-2build1 [21.1 kB]
+Get:3 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 libexpat1-dev amd64 2.4.7-1ubuntu0.2 [147 kB]
+Get:4 http://in.archive.ubuntu.com/ubuntu jammy/main amd64 libjs-jquery all 3.6.0+dfsg+~3.5.13-1 [321 kB]
+Get:5 http://in.archive.ubuntu.com/ubuntu jammy/main amd64 libjs-underscore all 1.13.2~dfsg-2 [118 kB]
+Get:6 http://in.archive.ubuntu.com/ubuntu jammy/main amd64 libjs-sphinxdoc all 4.3.2-1 [139 kB]
+Get:7 http://in.archive.ubuntu.com/ubuntu jammy/main amd64 libjson-perl all 4.04000-1 [81.8 kB]
+Get:8 http://in.archive.ubuntu.com/ubuntu jammy/main amd64 libtypes-serialiser-perl all 1.01-1 [11.6 kB]
+Get:9 http://in.archive.ubuntu.com/ubuntu jammy/main amd64 libjson-xs-perl amd64 4.030-1build3 [87.2 kB]
+Get:10 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 libllvm14 amd64 1:14.0.0-1ubuntu1.1 [24.0 MB]
+Get:11 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpq5 amd64 14.9-0ubuntu0.22.04.1 [141 kB]
+Get:12 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpq-dev amd64 14.9-0ubuntu0.22.04.1 [147 kB]
+Get:13 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 zlib1g-dev amd64 1:1.2.11.dfsg-2ubuntu9.2 [164 kB]
+Get:14 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-dev amd64 3.10.12-1~22.04.2 [4,764 kB]
+Get:15 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3-dev amd64 3.10.6-1~22.04 [7,166 B]
+Get:16 http://in.archive.ubuntu.com/ubuntu jammy/main amd64 postgresql-client-common all 238 [29.6 kB]
+Get:17 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 postgresql-client-14 amd64 14.9-0ubuntu0.22.04.1 [1,222 kB]
+Get:18 http://in.archive.ubuntu.com/ubuntu jammy/main amd64 postgresql-common all 238 [169 kB]
+Get:19 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 postgresql-14 amd64 14.9-0ubuntu0.22.04.1 [16.1 MB]
+Get:20 http://in.archive.ubuntu.com/ubuntu jammy/main amd64 postgresql all 14+238 [3,288 B]
+Get:21 http://in.archive.ubuntu.com/ubuntu jammy/main amd64 postgresql-contrib all 14+238 [3,292 B]
+Get:22 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10-dev amd64 3.10.12-1~22.04.2 [507 kB]
+Get:23 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3-dev amd64 3.10.6-1~22.04 [26.0 kB]
+Get:24 http://in.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-venv amd64 3.10.6-1~22.04 [1,038 B]
+Get:25 http://in.archive.ubuntu.com/ubuntu jammy-updates/main amd64 sysstat amd64 12.5.2-2ubuntu0.2 [487 kB]
+Fetched 48.9 MB in 34s (1,429 kB/s)                                            
+Preconfiguring packages ...
+Selecting previously unselected package curl.
+(Reading database ... 176493 files and directories currently installed.)
+Preparing to unpack .../00-curl_7.81.0-1ubuntu1.14_amd64.deb ...
+Unpacking curl (7.81.0-1ubuntu1.14) ...
+Selecting previously unselected package libcommon-sense-perl:amd64.
+Preparing to unpack .../01-libcommon-sense-perl_3.75-2build1_amd64.deb ...
+Unpacking libcommon-sense-perl:amd64 (3.75-2build1) ...
+Selecting previously unselected package libexpat1-dev:amd64.
+Preparing to unpack .../02-libexpat1-dev_2.4.7-1ubuntu0.2_amd64.deb ...
+Unpacking libexpat1-dev:amd64 (2.4.7-1ubuntu0.2) ...
+Selecting previously unselected package libjs-jquery.
+Preparing to unpack .../03-libjs-jquery_3.6.0+dfsg+~3.5.13-1_all.deb ...
+Unpacking libjs-jquery (3.6.0+dfsg+~3.5.13-1) ...
+Selecting previously unselected package libjs-underscore.
+Preparing to unpack .../04-libjs-underscore_1.13.2~dfsg-2_all.deb ...
+Unpacking libjs-underscore (1.13.2~dfsg-2) ...
+Selecting previously unselected package libjs-sphinxdoc.
+Preparing to unpack .../05-libjs-sphinxdoc_4.3.2-1_all.deb ...
+Unpacking libjs-sphinxdoc (4.3.2-1) ...
+Selecting previously unselected package libjson-perl.
+Preparing to unpack .../06-libjson-perl_4.04000-1_all.deb ...
+Unpacking libjson-perl (4.04000-1) ...
+Selecting previously unselected package libtypes-serialiser-perl.
+Preparing to unpack .../07-libtypes-serialiser-perl_1.01-1_all.deb ...
+Unpacking libtypes-serialiser-perl (1.01-1) ...
+Selecting previously unselected package libjson-xs-perl.
+Preparing to unpack .../08-libjson-xs-perl_4.030-1build3_amd64.deb ...
+Unpacking libjson-xs-perl (4.030-1build3) ...
+Selecting previously unselected package libllvm14:amd64.
+Preparing to unpack .../09-libllvm14_1%3a14.0.0-1ubuntu1.1_amd64.deb ...
+Unpacking libllvm14:amd64 (1:14.0.0-1ubuntu1.1) ...
+Selecting previously unselected package libpq5:amd64.
+Preparing to unpack .../10-libpq5_14.9-0ubuntu0.22.04.1_amd64.deb ...
+Unpacking libpq5:amd64 (14.9-0ubuntu0.22.04.1) ...
+Selecting previously unselected package libpq-dev.
+Preparing to unpack .../11-libpq-dev_14.9-0ubuntu0.22.04.1_amd64.deb ...
+Unpacking libpq-dev (14.9-0ubuntu0.22.04.1) ...
+Selecting previously unselected package zlib1g-dev:amd64.
+Preparing to unpack .../12-zlib1g-dev_1%3a1.2.11.dfsg-2ubuntu9.2_amd64.deb ...
+Unpacking zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu9.2) ...
+Selecting previously unselected package libpython3.10-dev:amd64.
+Preparing to unpack .../13-libpython3.10-dev_3.10.12-1~22.04.2_amd64.deb ...
+Unpacking libpython3.10-dev:amd64 (3.10.12-1~22.04.2) ...
+Selecting previously unselected package libpython3-dev:amd64.
+Preparing to unpack .../14-libpython3-dev_3.10.6-1~22.04_amd64.deb ...
+Unpacking libpython3-dev:amd64 (3.10.6-1~22.04) ...
+Selecting previously unselected package postgresql-client-common.
+Preparing to unpack .../15-postgresql-client-common_238_all.deb ...
+Unpacking postgresql-client-common (238) ...
+Selecting previously unselected package postgresql-client-14.
+Preparing to unpack .../16-postgresql-client-14_14.9-0ubuntu0.22.04.1_amd64.deb 
+...
+Unpacking postgresql-client-14 (14.9-0ubuntu0.22.04.1) ...
+Selecting previously unselected package postgresql-common.
+Preparing to unpack .../17-postgresql-common_238_all.deb ...
+Adding 'diversion of /usr/bin/pg_config to /usr/bin/pg_config.libpq-dev by postg
+resql-common'
+Unpacking postgresql-common (238) ...
+Selecting previously unselected package postgresql-14.
+Preparing to unpack .../18-postgresql-14_14.9-0ubuntu0.22.04.1_amd64.deb ...
+Unpacking postgresql-14 (14.9-0ubuntu0.22.04.1) ...
+Selecting previously unselected package postgresql.
+Preparing to unpack .../19-postgresql_14+238_all.deb ...
+Unpacking postgresql (14+238) ...
+Selecting previously unselected package postgresql-contrib.
+Preparing to unpack .../20-postgresql-contrib_14+238_all.deb ...
+Unpacking postgresql-contrib (14+238) ...
+Selecting previously unselected package python3.10-dev.
+Preparing to unpack .../21-python3.10-dev_3.10.12-1~22.04.2_amd64.deb ...
+Unpacking python3.10-dev (3.10.12-1~22.04.2) ...
+Selecting previously unselected package python3-dev.
+Preparing to unpack .../22-python3-dev_3.10.6-1~22.04_amd64.deb ...
+Unpacking python3-dev (3.10.6-1~22.04) ...
+Selecting previously unselected package python3-venv.
+Preparing to unpack .../23-python3-venv_3.10.6-1~22.04_amd64.deb ...
+Unpacking python3-venv (3.10.6-1~22.04) ...
+Selecting previously unselected package sysstat.
+Preparing to unpack .../24-sysstat_12.5.2-2ubuntu0.2_amd64.deb ...
+Unpacking sysstat (12.5.2-2ubuntu0.2) ...
+Setting up postgresql-client-common (238) ...
+Setting up libpq5:amd64 (14.9-0ubuntu0.22.04.1) ...
+Setting up libcommon-sense-perl:amd64 (3.75-2build1) ...
+Setting up libpq-dev (14.9-0ubuntu0.22.04.1) ...
+Setting up postgresql-client-14 (14.9-0ubuntu0.22.04.1) ...
+update-alternatives: using /usr/share/postgresql/14/man/man1/psql.1.gz to provid
+e /usr/share/man/man1/psql.1.gz (psql.1.gz) in auto mode
+Setting up libexpat1-dev:amd64 (2.4.7-1ubuntu0.2) ...
+Setting up python3-venv (3.10.6-1~22.04) ...
+Setting up zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu9.2) ...
+Setting up libllvm14:amd64 (1:14.0.0-1ubuntu1.1) ...
+Setting up libtypes-serialiser-perl (1.01-1) ...
+Setting up libjson-perl (4.04000-1) ...
+Setting up curl (7.81.0-1ubuntu1.14) ...
+Setting up libjs-jquery (3.6.0+dfsg+~3.5.13-1) ...
+Setting up sysstat (12.5.2-2ubuntu0.2) ...
+
+Creating config file /etc/default/sysstat with new version
+update-alternatives: using /usr/bin/sar.sysstat to provide /usr/bin/sar (sar) in
+ auto mode
+Created symlink /etc/systemd/system/sysstat.service.wants/sysstat-collect.timer 
+→ /lib/systemd/system/sysstat-collect.timer.
+Created symlink /etc/systemd/system/sysstat.service.wants/sysstat-summary.timer 
+→ /lib/systemd/system/sysstat-summary.timer.
+Created symlink /etc/systemd/system/multi-user.target.wants/sysstat.service → /l
+ib/systemd/system/sysstat.service.
+Setting up libjs-underscore (1.13.2~dfsg-2) ...
+Setting up libjson-xs-perl (4.030-1build3) ...
+Setting up postgresql-common (238) ...
+Adding user postgres to group ssl-cert
+
+Creating config file /etc/postgresql-common/createcluster.conf with new version
+Building PostgreSQL dictionaries from installed myspell/hunspell packages...
+  en_us
+Removing obsolete dictionary files:
+Created symlink /etc/systemd/system/multi-user.target.wants/postgresql.service →
+ /lib/systemd/system/postgresql.service.
+Setting up libpython3.10-dev:amd64 (3.10.12-1~22.04.2) ...
+Setting up libjs-sphinxdoc (4.3.2-1) ...
+Setting up python3.10-dev (3.10.12-1~22.04.2) ...
+Setting up postgresql-14 (14.9-0ubuntu0.22.04.1) ...
+Creating new PostgreSQL cluster 14/main ...
+/usr/lib/postgresql/14/bin/initdb -D /var/lib/postgresql/14/main --auth-local pe
+er --auth-host scram-sha-256 --no-instructions
+The files belonging to this database system will be owned by user "postgres".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "en_IN".
+The default database encoding has accordingly been set to "UTF8".
+The default text search configuration will be set to "english".
+
+Data page checksums are disabled.
+
+fixing permissions on existing directory /var/lib/postgresql/14/main ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default max_connections ... 100
+selecting default shared_buffers ... 128MB
+selecting default time zone ... Asia/Calcutta
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+update-alternatives: using /usr/share/postgresql/14/man/man1/postmaster.1.gz to 
+provide /usr/share/man/man1/postmaster.1.gz (postmaster.1.gz) in auto mode
+Setting up libpython3-dev:amd64 (3.10.6-1~22.04) ...
+Setting up python3-dev (3.10.6-1~22.04) ...
+Setting up postgresql-contrib (14+238) ...
+Setting up postgresql (14+238) ...
+Processing triggers for man-db (2.10.2-1) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.4) ...
+vks@VarunVM:~$ sudo apt install python3-venv python3-dev libpq-dev postgresql postgresql-contrib nginx curl
+[sudo] password for vks: 
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+postgresql is already the newest version (14+238).
+postgresql-contrib is already the newest version (14+238).
+curl is already the newest version (7.81.0-1ubuntu1.14).
+libpq-dev is already the newest version (14.9-0ubuntu0.22.04.1).
+nginx is already the newest version (1.18.0-6ubuntu14.4).
+python3-dev is already the newest version (3.10.6-1~22.04).
+python3-venv is already the newest version (3.10.6-1~22.04).
+The following packages were automatically installed and are no longer required:
+  gyp libc-ares2 libjs-events libjs-highlight.js libjs-inherits
+  libjs-is-typedarray libjs-psl libjs-source-map libjs-sprintf-js
+  libjs-typedarray-to-buffer libnode-dev libnode72 libuv1-dev node-abbrev
+  node-ansi-regex node-ansi-styles node-ansistyles node-are-we-there-yet
+  node-arrify node-asap node-asynckit node-balanced-match node-brace-expansion
+  node-chownr node-clean-yaml-object node-color-convert node-color-name
+  node-commander node-core-util-is node-decompress-response
+  node-delayed-stream node-delegates node-depd node-diff node-encoding
+  node-end-of-stream node-err-code node-escape-string-regexp node-fancy-log
+  node-foreground-child node-fs.realpath node-function-bind node-get-stream
+  node-glob node-growl node-has-flag node-has-unicode node-hosted-git-info
+  node-iconv-lite node-iferr node-imurmurhash node-indent-string node-inflight
+  node-inherits node-ini node-ip node-ip-regex node-is-buffer
+  node-is-plain-obj node-is-typedarray node-isarray node-isexe
+  node-json-parse-better-errors node-jsonparse node-kind-of
+  node-lodash-packages node-lowercase-keys node-lru-cache node-mimic-response
+  node-minimatch node-minimist node-minipass node-mute-stream node-negotiator
+  node-npm-bundled node-once node-osenv node-p-cancelable node-p-map
+  node-path-is-absolute node-process-nextick-args node-promise-inflight
+  node-promise-retry node-promzard node-pump node-quick-lru node-read
+  node-readable-stream node-resolve node-retry node-safe-buffer
+  node-set-blocking node-signal-exit node-slash node-slice-ansi
+  node-source-map node-spdx-correct node-spdx-exceptions
+  node-spdx-expression-parse node-spdx-license-ids node-sprintf-js
+  node-stealthy-require node-string-decoder node-supports-color
+  node-text-table node-time-stamp node-tmatch node-typedarray-to-buffer
+  node-universalify node-util-deprecate node-validate-npm-package-license
+  node-webidl-conversions node-whatwg-fetch node-wrappy node-yallist
+  nodejs-doc
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 6 not upgraded.
+vks@VarunVM:~$ sudo -u postgres psql
+could not change directory to "/home/vks": Permission denied
+psql (14.9 (Ubuntu 14.9-0ubuntu0.22.04.1))
+Type "help" for help.
+
+postgres=# CREATE DATABASE myproject;
+CREATE DATABASE
+postgres=# CREATE USER myprojectuser WITH PASSWORD 'password';
+CREATE ROLE
+postgres=# ALTER ROLE myprojectuser SET client_encoding TO 'utf8';
+ALTER ROLE
+postgres=# ALTER ROLE myprojectuser SET default_transaction_isolation TO 'read committed';
+ALTER ROLE
+postgres=# ALTER ROLE myprojectuser SET timezone TO 'UTC';
+ALTER ROLE
+postgres=# GRANT ALL PRIVILEGES ON DATABASE myproject TO myprojectuser;
+GRANT
+postgres=# \q
+vks@VarunVM:~$ mkdir ~/myprojectdir
+cd ~/myprojectdir
+vks@VarunVM:~/myprojectdir$ python3 -m venv myprojectenv
+vks@VarunVM:~/myprojectdir$ ls
+myprojectenv
+vks@VarunVM:~/myprojectdir$ pwd
+/home/vks/myprojectdir
+vks@VarunVM:~/myprojectdir$ source myprojectenv/bin/activate
+(myprojectenv) vks@VarunVM:~/myprojectdir$ pip install django gunicorn psycopg2-binary
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7ff49b157b20>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/django/
+
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7ff49b157d30>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/django/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7ff49b157f40>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/django/
+
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7ff49b194220>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/django/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7ff49b1943d0>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/django/
+ERROR: Could not find a version that satisfies the requirement django (from versions: none)
+ERROR: No matching distribution found for django
+(myprojectenv) vks@VarunVM:~/myprojectdir$ 
+(myprojectenv) vks@VarunVM:~/myprojectdir$ 
+(myprojectenv) vks@VarunVM:~/myprojectdir$ pip install django gunicorn 
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f87a7b4f850>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/django/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f87a7b4fa60>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/django/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f87a7b4fc70>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/django/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f87a7b4ff10>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/django/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f87a7b90100>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/django/
+ERROR: Could not find a version that satisfies the requirement django (from versions: none)
+ERROR: No matching distribution found for django
+(myprojectenv) vks@VarunVM:~/myprojectdir$ pip install Django
+Collecting Django
+  Downloading Django-4.2.7-py3-none-any.whl (8.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.0/8.0 MB 581.6 kB/s eta 0:00:00
+Collecting sqlparse>=0.3.1
+  Downloading sqlparse-0.4.4-py3-none-any.whl (41 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 41.2/41.2 KB 749.3 kB/s eta 0:00:00
+Collecting asgiref<4,>=3.6.0
+  Downloading asgiref-3.7.2-py3-none-any.whl (24 kB)
+Collecting typing-extensions>=4
+  Downloading typing_extensions-4.8.0-py3-none-any.whl (31 kB)
+Installing collected packages: typing-extensions, sqlparse, asgiref, Django
+Successfully installed Django-4.2.7 asgiref-3.7.2 sqlparse-0.4.4 typing-extensions-4.8.0
+(myprojectenv) vks@VarunVM:~/myprojectdir$ pip install gunicorn 
+Collecting gunicorn
+  Downloading gunicorn-21.2.0-py3-none-any.whl (80 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.2/80.2 KB 496.1 kB/s eta 0:00:00
+Collecting packaging
+  Downloading packaging-23.2-py3-none-any.whl (53 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 53.0/53.0 KB 631.9 kB/s eta 0:00:00
+Installing collected packages: packaging, gunicorn
+Successfully installed gunicorn-21.2.0 packaging-23.2
+(myprojectenv) vks@VarunVM:~/myprojectdir$ pip installpsycopg2-binary
+ERROR: unknown command "installpsycopg2-binary"
+(myprojectenv) vks@VarunVM:~/myprojectdir$ pip install psycopg2-binary
+Collecting psycopg2-binary
+  Downloading psycopg2_binary-2.9.9-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 955.0 kB/s eta 0:00:00
+Installing collected packages: psycopg2-binary
+Successfully installed psycopg2-binary-2.9.9
+(myprojectenv) vks@VarunVM:~/myprojectdir$ django-admin startproject myprojects ~/myprojectdir
+(myprojectenv) vks@VarunVM:~/myprojectdir$ nano ~/myprojectdir/myproject/settings.py
+(myprojectenv) vks@VarunVM:~/myprojectdir$ nano ~/myprojectdir/myprojects/settings.py
+(myprojectenv) vks@VarunVM:~/myprojectdir$ nano ~/myprojectdir/myprojects/settings.py
+(myprojectenv) vks@VarunVM:~/myprojectdir$ ~/myprojectdir/manage.py makemigration
+Unknown command: 'makemigration'. Did you mean makemigrations?
+Type 'manage.py help' for usage.
+(myprojectenv) vks@VarunVM:~/myprojectdir$ ~/myprojectdir/manage.py makemigrations
+No changes detected
+(myprojectenv) vks@VarunVM:~/myprojectdir$ ~/myprojectdir/manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying sessions.0001_initial... OK
+(myprojectenv) vks@VarunVM:~/myprojectdir$ ~/myprojectdir/manage.py makemigrations
+No changes detected
+(myprojectenv) vks@VarunVM:~/myprojectdir$ ~/myprojectdir/manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  No migrations to apply.
+(myprojectenv) vks@VarunVM:~/myprojectdir$ ~/myprojectdir/manage.py createsuperuser
+Username (leave blank to use 'vks'): vks   
+Email address: vks@gmail.com
+Password: 
+Password (again): 
+The password is too similar to the username.
+This password is too short. It must contain at least 8 characters.
+Bypass password validation and create user anyway? [y/N]: y
+Superuser created successfully.
+(myprojectenv) vks@VarunVM:~/myprojectdir$ ~/myprojectdir/manage.py collectstatic
+
+125 static files copied to '/home/vks/myprojectdir/static'.
+(myprojectenv) vks@VarunVM:~/myprojectdir$ sudo ufw allow 8000
+[sudo] password for vks: 
+Sorry, try again.
+[sudo] password for vks: 
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+(myprojectenv) vks@VarunVM:~/myprojectdir$ ~/myprojectdir/manage.py runserver 0.0.0.0:8000
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+November 19, 2023 - 09:51:45
+Django version 4.2.7, using settings 'myprojects.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Invalid HTTP_HOST header: '0.0.0.0:8000'. You may need to add '0.0.0.0' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/http/request.py", line 150, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '0.0.0.0:8000'. You may need to add '0.0.0.0' to ALLOWED_HOSTS.
+Bad Request: /
+[19/Nov/2023 09:51:58] "GET / HTTP/1.1" 400 63515
+[19/Nov/2023 09:52:09] "GET / HTTP/1.1" 200 10664
+^C(myprojectenv) vks@VarunVM:~/myprojectdir$ 
+(myprojectenv) vks@VarunVM:~/myprojectdir$ cd myprojects
+(myprojectenv) vks@VarunVM:~/myprojectdir/myprojects$ ls
+asgi.py  __init__.py  __pycache__  settings.py  urls.py  wsgi.py
+(myprojectenv) vks@VarunVM:~/myprojectdir/myprojects$ sudo nano settings.py
+(myprojectenv) vks@VarunVM:~/myprojectdir/myprojects$ cd ..
+(myprojectenv) vks@VarunVM:~/myprojectdir$ gunicorn --bind 0.0.0.0:8000 myprojects.wsgi
+[2023-11-19 15:26:46 +0530] [13809] [INFO] Starting gunicorn 21.2.0
+[2023-11-19 15:26:46 +0530] [13809] [INFO] Listening at: http://0.0.0.0:8000 (13809)
+[2023-11-19 15:26:46 +0530] [13809] [INFO] Using worker: sync
+[2023-11-19 15:26:46 +0530] [13810] [INFO] Booting worker with pid: 13810
+^C[2023-11-19 15:27:07 +0530] [13809] [INFO] Handling signal: int
+[2023-11-19 15:27:07 +0530] [13809] [INFO] Shutting down: Master
+(myprojectenv) vks@VarunVM:~/myprojectdir$ ^C
+(myprojectenv) vks@VarunVM:~/myprojectdir$ deactivate
+vks@VarunVM:~/myprojectdir$ sudo nano /etc/systemd/system/gunicorn.socket
+vks@VarunVM:~/myprojectdir$ sudo nano /etc/systemd/system/gunicorn.service
+vks@VarunVM:~/myprojectdir$ sudo systemctl start gunicorn.socket
+sudo systemctl enable gunicorn.socket
+vks@VarunVM:~/myprojectdir$ sudo systemctl status gunicorn.socket
+● gunicorn.socket - gunicorn socket
+     Loaded: loaded (/etc/systemd/system/gunicorn.socket; enabled; vendor preset: enabled)
+     Active: active (listening) since Sun 2023-11-19 09:54:14 IST; 5h 43min ago
+   Triggers: ● gunicorn.service
+     Listen: /run/gunicorn.sock (Stream)
+     CGroup: /system.slice/gunicorn.socket
+
+Nov 19 09:54:14 VarunVM systemd[1]: Listening on gunicorn socket.
+vks@VarunVM:~/myprojectdir$ sudo systemctl status gunicorn.socket
+● gunicorn.socket - gunicorn socket
+     Loaded: loaded (/etc/systemd/system/gunicorn.socket; enabled; vendor preset: enabled)
+     Active: active (listening) since Sun 2023-11-19 09:54:14 IST; 5h 43min ago
+   Triggers: ● gunicorn.service
+     Listen: /run/gunicorn.sock (Stream)
+     CGroup: /system.slice/gunicorn.socket
+
+Nov 19 09:54:14 VarunVM systemd[1]: Listening on gunicorn socket.
+vks@VarunVM:~/myprojectdir$ file /run/gunicorn.sock
+/run/gunicorn.sock: socket
+vks@VarunVM:~/myprojectdir$ sudo journalctl -u gunicorn.socket
+Nov 19 08:50:36 VarunVM systemd[1]: /etc/systemd/system/gunicorn.socket:6: Unknown section 'Service'. Ignoring.
+Nov 19 08:50:36 VarunVM systemd[1]: gunicorn.socket: Unit has no Listen setting (ListenStream=, ListenDatagram=, ListenFIFO=, ...).>
+Nov 19 08:50:56 VarunVM systemd[1]: /etc/systemd/system/gunicorn.socket:6: Unknown section 'Service'. Ignoring.
+Nov 19 08:50:56 VarunVM systemd[1]: gunicorn.socket: Unit has no Listen setting (ListenStream=, ListenDatagram=, ListenFIFO=, ...).>
+Nov 19 08:51:20 VarunVM systemd[1]: /etc/systemd/system/gunicorn.socket:6: Unknown section 'Service'. Ignoring.
+Nov 19 08:51:20 VarunVM systemd[1]: gunicorn.socket: Unit has no Listen setting (ListenStream=, ListenDatagram=, ListenFIFO=, ...).>
+Nov 19 08:51:20 VarunVM systemd[1]: /etc/systemd/system/gunicorn.socket:6: Unknown section 'Service'. Ignoring.
+Nov 19 08:51:20 VarunVM systemd[1]: gunicorn.socket: Unit has no Listen setting (ListenStream=, ListenDatagram=, ListenFIFO=, ...).>
+Nov 19 09:54:14 VarunVM systemd[1]: Listening on gunicorn socket.
+lines 1-9/9 (END)
+vks@VarunVM:~/myprojectdir$ cd /etc/systemd/system/gunicorn.socket
+-bash: cd: /etc/systemd/system/gunicorn.socket: Not a directory
+vks@VarunVM:~/myprojectdir$ cd /etc/systemd/system/
+vks@VarunVM:/etc/systemd/system$ ls
+ bluetooth.target.wants                       gunicorn.service             'snap-gnome\x2d3\x2d38\x2d2004-143.mount'
+ cloud-final.service.wants                    gunicorn.socket              'snap-gnome\x2d42\x2d2204-120.mount'
+ dbus-fi.w1.wpa_supplicant1.service           multi-user.target.wants      'snap-gnome\x2d42\x2d2204-141.mount'
+ dbus-org.bluez.service                       network-online.target.wants  'snap-gtk\x2dcommon\x2dthemes-1535.mount'
+ dbus-org.freedesktop.Avahi.service           oem-config.service.wants      snap-node-7844.mount
+ dbus-org.freedesktop.ModemManager1.service   paths.target.wants            snap-snapd-19457.mount
+ dbus-org.freedesktop.nm-dispatcher.service   printer.target.wants          snap-snapd-20290.mount
+ dbus-org.freedesktop.oom1.service            rescue.target.wants          'snap-snapd\x2ddesktop\x2dintegration-83.mount'
+ dbus-org.freedesktop.resolve1.service        sleep.target.wants           'snap-snap\x2dstore-959.mount'
+ dbus-org.freedesktop.thermald.service        snap-bare-5.mount             sockets.target.wants
+ dbus-org.freedesktop.timesync1.service       snap-core20-1974.mount        sshd.service
+ display-manager.service                      snap-core20-2015.mount        sudo.service
+ display-manager.service.wants                snap-core22-858.mount         sysinit.target.wants
+ emergency.target.wants                       snap-core22-864.mount         syslog.service
+ final.target.wants                           snap-curl-1754.mount          timers.target.wants
+ getty.target.wants                           snapd.mounts.target.wants    'var-snap-firefox-common-host\x2dhunspell.mount'
+ graphical.target.wants                       snap-firefox-2987.mount
+vks@VarunVM:/etc/systemd/system$ sudo nano gunicorn.socket
+vks@VarunVM:/etc/systemd/system$ sudo systemctl status gunicorn
+× gunicorn.service - gunicorn daemon
+     Loaded: loaded (/etc/systemd/system/gunicorn.service; enabled; vendor preset: enabled)
+     Active: failed (Result: exit-code) since Sun 2023-11-19 11:48:04 IST; 3h 53min ago
+TriggeredBy: ● gunicorn.socket
+   Main PID: 7386 (code=exited, status=3)
+        CPU: 124ms
+
+Nov 19 11:48:04 VarunVM gunicorn[7387]:   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+Nov 19 11:48:04 VarunVM gunicorn[7387]:   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+Nov 19 11:48:04 VarunVM gunicorn[7387]:   File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+Nov 19 11:48:04 VarunVM gunicorn[7387]: ModuleNotFoundError: No module named 'mainRegisterForm'
+Nov 19 11:48:04 VarunVM gunicorn[7387]: [2023-11-19 11:48:04 +0530] [7387] [INFO] Worker exiting (pid: 7387)
+Nov 19 11:48:04 VarunVM gunicorn[7386]: [2023-11-19 11:48:04 +0530] [7386] [ERROR] Worker (pid:7387) exited with code 3
+Nov 19 11:48:04 VarunVM gunicorn[7386]: [2023-11-19 11:48:04 +0530] [7386] [ERROR] Shutting down: Master
+Nov 19 11:48:04 VarunVM gunicorn[7386]: [2023-11-19 11:48:04 +0530] [7386] [ERROR] Reason: Worker failed to boot.
+Nov 19 11:48:04 VarunVM systemd[1]: gunicorn.service: Main process exited, code=exited, status=3/NOTIMPLEMENTED
+Nov 19 11:48:04 VarunVM systemd[1]: gunicorn.service: Failed with result 'exit-code'.
+vks@VarunVM:/etc/systemd/system$ sudo systemctl demon-reload
+[sudo] password for vks: 
+Unknown command verb demon-reload.
+vks@VarunVM:/etc/systemd/system$ sudo systemctl daemon-reload
+vks@VarunVM:/etc/systemd/system$ sudo systemctl status gunicorn
+× gunicorn.service - gunicorn daemon
+     Loaded: loaded (/etc/systemd/system/gunicorn.service; enabled; vendor preset: enabled)
+     Active: failed (Result: exit-code) since Sun 2023-11-19 11:48:04 IST; 4h 53min ago
+TriggeredBy: ● gunicorn.socket
+   Main PID: 7386 (code=exited, status=3)
+        CPU: 124ms
+
+Nov 19 11:48:04 VarunVM gunicorn[7387]:   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+Nov 19 11:48:04 VarunVM gunicorn[7387]:   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+Nov 19 11:48:04 VarunVM gunicorn[7387]:   File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+Nov 19 11:48:04 VarunVM gunicorn[7387]: ModuleNotFoundError: No module named 'mainRegisterForm'
+Nov 19 11:48:04 VarunVM gunicorn[7387]: [2023-11-19 11:48:04 +0530] [7387] [INFO] Worker exiting (pid: 7387)
+Nov 19 11:48:04 VarunVM gunicorn[7386]: [2023-11-19 11:48:04 +0530] [7386] [ERROR] Worker (pid:7387) exited with code 3
+Nov 19 11:48:04 VarunVM gunicorn[7386]: [2023-11-19 11:48:04 +0530] [7386] [ERROR] Shutting down: Master
+Nov 19 11:48:04 VarunVM gunicorn[7386]: [2023-11-19 11:48:04 +0530] [7386] [ERROR] Reason: Worker failed to boot.
+Nov 19 11:48:04 VarunVM systemd[1]: gunicorn.service: Main process exited, code=exited, status=3/NOTIMPLEMENTED
+Nov 19 11:48:04 VarunVM systemd[1]: gunicorn.service: Failed with result 'exit-code'.
+vks@VarunVM:/etc/systemd/system$ sudo systemctl daemon-reload
+vks@VarunVM:/etc/systemd/system$ sudo systemctl restart gunicorn
+vks@VarunVM:/etc/systemd/system$ sudo systemctl status gunicorn
+● gunicorn.service - gunicorn daemon
+     Loaded: loaded (/etc/systemd/system/gunicorn.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2023-11-19 16:45:14 IST; 3s ago
+TriggeredBy: ● gunicorn.socket
+   Main PID: 14507 (gunicorn)
+      Tasks: 4 (limit: 2253)
+     Memory: 106.7M
+        CPU: 851ms
+     CGroup: /system.slice/gunicorn.service
+             ├─14507 /home/vks/myprojectdir/myprojectenv/bin/python3 /home/vks/myprojectdir/myprojectenv/bin/gunicorn --access-logf>
+             ├─14508 /home/vks/myprojectdir/myprojectenv/bin/python3 /home/vks/myprojectdir/myprojectenv/bin/gunicorn --access-logf>
+             ├─14509 /home/vks/myprojectdir/myprojectenv/bin/python3 /home/vks/myprojectdir/myprojectenv/bin/gunicorn --access-logf>
+             └─14510 /home/vks/myprojectdir/myprojectenv/bin/python3 /home/vks/myprojectdir/myprojectenv/bin/gunicorn --access-logf>
+
+Nov 19 16:45:14 VarunVM systemd[1]: Started gunicorn daemon.
+Nov 19 16:45:15 VarunVM gunicorn[14507]: [2023-11-19 16:45:15 +0530] [14507] [INFO] Starting gunicorn 21.2.0
+Nov 19 16:45:15 VarunVM gunicorn[14507]: [2023-11-19 16:45:15 +0530] [14507] [INFO] Listening at: unix:/run/gunicorn.sock (14507)
+Nov 19 16:45:15 VarunVM gunicorn[14507]: [2023-11-19 16:45:15 +0530] [14507] [INFO] Using worker: sync
+Nov 19 16:45:15 VarunVM gunicorn[14508]: [2023-11-19 16:45:15 +0530] [14508] [INFO] Booting worker with pid: 14508
+Nov 19 16:45:15 VarunVM gunicorn[14509]: [2023-11-19 16:45:15 +0530] [14509] [INFO] Booting worker with pid: 14509
+Nov 19 16:45:15 VarunVM gunicorn[14510]: [2023-11-19 16:45:15 +0530] [14510] [INFO] Booting worker with pid: 14510
+
+vks@VarunVM:/etc/systemd/system$ curl --unix-socket /run/gunicorn.sock localhost
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="robots" content="NONE,NOARCHIVE">
+  <title>DisallowedHost
+          at /</title>
+  <style type="text/css">
+    html * { padding:0; margin:0; }
+    body * { padding:10px 20px; }
+    body * * { padding:0; }
+    body { font:small sans-serif; background-color:#fff; color:#000; }
+    body>div { border-bottom:1px solid #ddd; }
+    h1 { font-weight:normal; }
+    h2 { margin-bottom:.8em; }
+    h3 { margin:1em 0 .5em 0; }
+    h4 { margin:0 0 .5em 0; font-weight: normal; }
+    code, pre { font-size: 100%; white-space: pre-wrap; word-break: break-word; }
+    summary { cursor: pointer; }
+    table { border:1px solid #ccc; border-collapse: collapse; width:100%; background:white; }
+    tbody td, tbody th { vertical-align:top; padding:2px 3px; }
+    thead th {
+      padding:1px 6px 1px 3px; background:#fefefe; text-align:left;
+      font-weight:normal; font-size:11px; border:1px solid #ddd;
+    }
+    tbody th { width:12em; text-align:right; color:#666; padding-right:.5em; }
+    table.vars { margin:5px 10px 2px 40px; width: auto; }
+    table.vars td, table.req td { font-family:monospace; }
+    table td.code { width:100%; }
+    table td.code pre { overflow:hidden; }
+    table.source th { color:#666; }
+    table.source td { font-family:monospace; white-space:pre; border-bottom:1px solid #eee; }
+    ul.traceback { list-style-type:none; color: #222; }
+    ul.traceback li.cause { word-break: break-word; }
+    ul.traceback li.frame { padding-bottom:1em; color:#4f4f4f; }
+    ul.traceback li.user { background-color:#e0e0e0; color:#000 }
+    div.context { padding:10px 0; overflow:hidden; }
+    div.context ol { padding-left:30px; margin:0 10px; list-style-position: inside; }
+    div.context ol li { font-family:monospace; white-space:pre; color:#777; cursor:pointer; padding-left: 2px; }
+    div.context ol li pre { display:inline; }
+    div.context ol.context-line li { color:#464646; background-color:#dfdfdf; padding: 3px 2px; }
+    div.context ol.context-line li span { position:absolute; right:32px; }
+    .user div.context ol.context-line li { background-color:#bbb; color:#000; }
+    .user div.context ol li { color:#666; }
+    div.commands, summary.commands { margin-left: 40px; }
+    div.commands a, summary.commands { color:#555; text-decoration:none; }
+    .user div.commands a { color: black; }
+    #summary { background: #ffc; }
+    #summary h2 { font-weight: normal; color: #666; }
+    #explanation { background:#eee; }
+    #template, #template-not-exist { background:#f6f6f6; }
+    #template-not-exist ul { margin: 0 0 10px 20px; }
+    #template-not-exist .postmortem-section { margin-bottom: 3px; }
+    #unicode-hint { background:#eee; }
+    #traceback { background:#eee; }
+    #requestinfo { background:#f6f6f6; padding-left:120px; }
+    #summary table { border:none; background:transparent; }
+    #requestinfo h2, #requestinfo h3 { position:relative; margin-left:-100px; }
+    #requestinfo h3 { margin-bottom:-1em; }
+    .error { background: #ffc; }
+    .specific { color:#cc3300; font-weight:bold; }
+    h2 span.commands { font-size:.7em; font-weight:normal; }
+    span.commands a:link {color:#5E5694;}
+    pre.exception_value { font-family: sans-serif; color: #575757; font-size: 1.5em; margin: 10px 0 10px 0; }
+    .append-bottom { margin-bottom: 10px; }
+    .fname { user-select: all; }
+  </style>
+  
+  <script>
+    function hideAll(elems) {
+      for (var e = 0; e < elems.length; e++) {
+        elems[e].style.display = 'none';
+      }
+    }
+    window.onload = function() {
+      hideAll(document.querySelectorAll('ol.pre-context'));
+      hideAll(document.querySelectorAll('ol.post-context'));
+      hideAll(document.querySelectorAll('div.pastebin'));
+    }
+    function toggle() {
+      for (var i = 0; i < arguments.length; i++) {
+        var e = document.getElementById(arguments[i]);
+        if (e) {
+          e.style.display = e.style.display == 'none' ? 'block': 'none';
+        }
+      }
+      return false;
+    }
+    function switchPastebinFriendly(link) {
+      s1 = "Switch to copy-and-paste view";
+      s2 = "Switch back to interactive view";
+      link.textContent = link.textContent.trim() == s1 ? s2: s1;
+      toggle('browserTraceback', 'pastebinTraceback');
+      return false;
+    }
+  </script>
+  
+</head>
+<body>
+<div id="summary">
+  <h1>DisallowedHost
+       at /</h1>
+  <pre class="exception_value">Invalid HTTP_HOST header: &#x27;localhost&#x27;. You may need to add &#x27;localhost&#x27; to ALLOWED_HOSTS.</pre>
+  <table class="meta">
+
+    <tr>
+      <th>Request Method:</th>
+      <td>GET</td>
+    </tr>
+    <tr>
+      <th>Request URL:</th>
+      <td>http://localhost/</td>
+    </tr>
+
+    <tr>
+      <th>Django Version:</th>
+      <td>4.2.7</td>
+    </tr>
+
+    <tr>
+      <th>Exception Type:</th>
+      <td>DisallowedHost</td>
+    </tr>
+
+
+    <tr>
+      <th>Exception Value:</th>
+      <td><pre>Invalid HTTP_HOST header: &#x27;localhost&#x27;. You may need to add &#x27;localhost&#x27; to ALLOWED_HOSTS.</pre></td>
+    </tr>
+
+
+    <tr>
+      <th>Exception Location:</th>
+      <td><span class="fname">/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/http/request.py</span>, line 150, in get_host</td>
+    </tr>
+
+
+    <tr>
+      <th>Python Executable:</th>
+      <td>/home/vks/myprojectdir/myprojectenv/bin/python3</td>
+    </tr>
+    <tr>
+      <th>Python Version:</th>
+      <td>3.10.12</td>
+    </tr>
+    <tr>
+      <th>Python Path:</th>
+      <td><pre>[&#x27;/home/vks/myprojectdir&#x27;,
+ &#x27;/home/vks/myprojectdir/myprojectenv/bin&#x27;,
+ &#x27;/usr/lib/python310.zip&#x27;,
+ &#x27;/usr/lib/python3.10&#x27;,
+ &#x27;/usr/lib/python3.10/lib-dynload&#x27;,
+ &#x27;/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages&#x27;]</pre></td>
+    </tr>
+    <tr>
+      <th>Server time:</th>
+      <td>Sun, 19 Nov 2023 11:18:58 +0000</td>
+    </tr>
+  </table>
+</div>
+
+
+
+
+<div id="traceback">
+  <h2>Traceback <span class="commands"><a href="#" onclick="return switchPastebinFriendly(this);">
+    Switch to copy-and-paste view</a></span>
+  </h2>
+  <div id="browserTraceback">
+    <ul class="traceback">
+      
+        
+        <li class="frame django">
+          
+            <code class="fname">/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/core/handlers/exception.py</code>, line 55, in inner
+          
+
+          
+            <div class="context" id="c140572979057920">
+              
+                <ol start="48" class="pre-context" id="pre140572979057920">
+                
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre></pre></li>
+                
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre>        return inner</pre></li>
+                
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre>    else:</pre></li>
+                
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre></pre></li>
+                
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre>        @wraps(get_response)</pre></li>
+                
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre>        def inner(request):</pre></li>
+                
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre>            try:</pre></li>
+                
+                </ol>
+              
+              <ol start="55" class="context-line">
+                <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre>                response = get_response(request)</pre> <span>…</span></li>
+              </ol>
+              
+                <ol start='56' class="post-context" id="post140572979057920">
+                  
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre>            except Exception as exc:</pre></li>
+                  
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre>                response = response_for_exception(request, exc)</pre></li>
+                  
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre>            return response</pre></li>
+                  
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre></pre></li>
+                  
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre>        return inner</pre></li>
+                  
+                  <li onclick="toggle('pre140572979057920', 'post140572979057920')"><pre></pre></li>
+                  
+              </ol>
+              
+            </div>
+          
+
+          
+            
+              <details>
+                <summary class="commands">Local vars</summary>
+            
+            <table class="vars" id="v140572979057920">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                  <tr>
+                    <td>exc</td>
+                    <td class="code"><pre>DisallowedHost(&quot;Invalid HTTP_HOST header: &#x27;localhost&#x27;. You may need to add &#x27;localhost&#x27; to ALLOWED_HOSTS.&quot;)</pre></td>
+                  </tr>
+                
+                  <tr>
+                    <td>get_response</td>
+                    <td class="code"><pre>&lt;CommonMiddleware get_response=convert_exception_to_response.&lt;locals&gt;.inner&gt;</pre></td>
+                  </tr>
+                
+                  <tr>
+                    <td>request</td>
+                    <td class="code"><pre>&lt;WSGIRequest: GET &#x27;/&#x27;&gt;</pre></td>
+                  </tr>
+                
+              </tbody>
+            </table>
+            </details>
+          
+        </li>
+      
+        
+        <li class="frame django">
+          
+            <code class="fname">/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/utils/deprecation.py</code>, line 133, in __call__
+          
+
+          
+            <div class="context" id="c140572979054912">
+              
+                <ol start="126" class="pre-context" id="pre140572979054912">
+                
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre></pre></li>
+                
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>    def __call__(self, request):</pre></li>
+                
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>        # Exit out to async mode, if needed</pre></li>
+                
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>        if iscoroutinefunction(self):</pre></li>
+                
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>            return self.__acall__(request)</pre></li>
+                
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>        response = None</pre></li>
+                
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>        if hasattr(self, &quot;process_request&quot;):</pre></li>
+                
+                </ol>
+              
+              <ol start="133" class="context-line">
+                <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>            response = self.process_request(request)</pre> <span>…</span></li>
+              </ol>
+              
+                <ol start='134' class="post-context" id="post140572979054912">
+                  
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>        response = response or self.get_response(request)</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>        if hasattr(self, &quot;process_response&quot;):</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>            response = self.process_response(request, response)</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>        return response</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre></pre></li>
+                  
+                  <li onclick="toggle('pre140572979054912', 'post140572979054912')"><pre>    async def __acall__(self, request):</pre></li>
+                  
+              </ol>
+              
+            </div>
+          
+
+          
+            
+              <details>
+                <summary class="commands">Local vars</summary>
+            
+            <table class="vars" id="v140572979054912">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                  <tr>
+                    <td>request</td>
+                    <td class="code"><pre>&lt;WSGIRequest: GET &#x27;/&#x27;&gt;</pre></td>
+                  </tr>
+                
+                  <tr>
+                    <td>response</td>
+                    <td class="code"><pre>None</pre></td>
+                  </tr>
+                
+                  <tr>
+                    <td>self</td>
+                    <td class="code"><pre>&lt;CommonMiddleware get_response=convert_exception_to_response.&lt;locals&gt;.inner&gt;</pre></td>
+                  </tr>
+                
+              </tbody>
+            </table>
+            </details>
+          
+        </li>
+      
+        
+        <li class="frame django">
+          
+            <code class="fname">/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/middleware/common.py</code>, line 48, in process_request
+          
+
+          
+            <div class="context" id="c140572979054208">
+              
+                <ol start="41" class="pre-context" id="pre140572979054208">
+                
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>        user_agent = request.META.get(&quot;HTTP_USER_AGENT&quot;)</pre></li>
+                
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>        if user_agent is not None:</pre></li>
+                
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>            for user_agent_regex in settings.DISALLOWED_USER_AGENTS:</pre></li>
+                
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>                if user_agent_regex.search(user_agent):</pre></li>
+                
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>                    raise PermissionDenied(&quot;Forbidden user agent&quot;)</pre></li>
+                
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre></pre></li>
+                
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>        # Check for a redirect based on settings.PREPEND_WWW</pre></li>
+                
+                </ol>
+              
+              <ol start="48" class="context-line">
+                <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>        host = request.get_host()</pre> <span>…</span></li>
+              </ol>
+              
+                <ol start='49' class="post-context" id="post140572979054208">
+                  
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre></pre></li>
+                  
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>        if settings.PREPEND_WWW and host and not host.startswith(&quot;www.&quot;):</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>            # Check if we also need to append a slash so we can do it all</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>            # with a single redirect. (This check may be somewhat expensive,</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>            # so we only do it if we already know we&#x27;re sending a redirect,</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054208', 'post140572979054208')"><pre>            # or in process_response if we get a 404.)</pre></li>
+                  
+              </ol>
+              
+            </div>
+          
+
+          
+            
+              <details>
+                <summary class="commands">Local vars</summary>
+            
+            <table class="vars" id="v140572979054208">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                  <tr>
+                    <td>request</td>
+                    <td class="code"><pre>&lt;WSGIRequest: GET &#x27;/&#x27;&gt;</pre></td>
+                  </tr>
+                
+                  <tr>
+                    <td>self</td>
+                    <td class="code"><pre>&lt;CommonMiddleware get_response=convert_exception_to_response.&lt;locals&gt;.inner&gt;</pre></td>
+                  </tr>
+                
+                  <tr>
+                    <td>user_agent</td>
+                    <td class="code"><pre>&#x27;curl/7.81.0&#x27;</pre></td>
+                  </tr>
+                
+              </tbody>
+            </table>
+            </details>
+          
+        </li>
+      
+        
+        <li class="frame django">
+          
+            <code class="fname">/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/http/request.py</code>, line 150, in get_host
+          
+
+          
+            <div class="context" id="c140572979054336">
+              
+                <ol start="143" class="pre-context" id="pre140572979054336">
+                
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>            msg = &quot;Invalid HTTP_HOST header: %r.&quot; % host</pre></li>
+                
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>            if domain:</pre></li>
+                
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>                msg += &quot; You may need to add %r to ALLOWED_HOSTS.&quot; % domain</pre></li>
+                
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>            else:</pre></li>
+                
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>                msg += (</pre></li>
+                
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>                    &quot; The domain name provided is not valid according to RFC 1034/1035.&quot;</pre></li>
+                
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>                )</pre></li>
+                
+                </ol>
+              
+              <ol start="150" class="context-line">
+                <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>            raise DisallowedHost(msg)</pre> <span>…</span></li>
+              </ol>
+              
+                <ol start='151' class="post-context" id="post140572979054336">
+                  
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre></pre></li>
+                  
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>    def get_port(self):</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>        &quot;&quot;&quot;Return the port number for the request as a string.&quot;&quot;&quot;</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>        if settings.USE_X_FORWARDED_PORT and &quot;HTTP_X_FORWARDED_PORT&quot; in self.META:</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>            port = self.META[&quot;HTTP_X_FORWARDED_PORT&quot;]</pre></li>
+                  
+                  <li onclick="toggle('pre140572979054336', 'post140572979054336')"><pre>        else:</pre></li>
+                  
+              </ol>
+              
+            </div>
+          
+
+          
+            
+              <details>
+                <summary class="commands">Local vars</summary>
+            
+            <table class="vars" id="v140572979054336">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                  <tr>
+                    <td>allowed_hosts</td>
+                    <td class="code"><pre>[&#x27;10.0.2.15&#x27;]</pre></td>
+                  </tr>
+                
+                  <tr>
+                    <td>domain</td>
+                    <td class="code"><pre>&#x27;localhost&#x27;</pre></td>
+                  </tr>
+                
+                  <tr>
+                    <td>host</td>
+                    <td class="code"><pre>&#x27;localhost&#x27;</pre></td>
+                  </tr>
+                
+                  <tr>
+                    <td>msg</td>
+                    <td class="code"><pre>(&quot;Invalid HTTP_HOST header: &#x27;localhost&#x27;. You may need to add &#x27;localhost&#x27; to &quot;
+ &#x27;ALLOWED_HOSTS.&#x27;)</pre></td>
+                  </tr>
+                
+                  <tr>
+                    <td>port</td>
+                    <td class="code"><pre>&#x27;&#x27;</pre></td>
+                  </tr>
+                
+                  <tr>
+                    <td>self</td>
+                    <td class="code"><pre>&lt;WSGIRequest: GET &#x27;/&#x27;&gt;</pre></td>
+                  </tr>
+                
+              </tbody>
+            </table>
+            </details>
+          
+        </li>
+      
+    </ul>
+  </div>
+
+  <form action="https://dpaste.com/" name="pasteform" id="pasteform" method="post">
+  <div id="pastebinTraceback" class="pastebin">
+    <input type="hidden" name="language" value="PythonConsole">
+    <input type="hidden" name="title"
+      value="DisallowedHost at /">
+    <input type="hidden" name="source" value="Django Dpaste Agent">
+    <input type="hidden" name="poster" value="Django">
+    <textarea name="content" id="traceback_area" cols="140" rows="25">
+Environment:
+
+
+Request Method: GET
+Request URL: http://localhost/
+
+Django Version: 4.2.7
+Python Version: 3.10.12
+Installed Applications:
+[&#x27;django.contrib.admin&#x27;,
+ &#x27;django.contrib.auth&#x27;,
+ &#x27;django.contrib.contenttypes&#x27;,
+ &#x27;django.contrib.sessions&#x27;,
+ &#x27;django.contrib.messages&#x27;,
+ &#x27;django.contrib.staticfiles&#x27;]
+Installed Middleware:
+[&#x27;django.middleware.security.SecurityMiddleware&#x27;,
+ &#x27;django.contrib.sessions.middleware.SessionMiddleware&#x27;,
+ &#x27;django.middleware.common.CommonMiddleware&#x27;,
+ &#x27;django.middleware.csrf.CsrfViewMiddleware&#x27;,
+ &#x27;django.contrib.auth.middleware.AuthenticationMiddleware&#x27;,
+ &#x27;django.contrib.messages.middleware.MessageMiddleware&#x27;,
+ &#x27;django.middleware.clickjacking.XFrameOptionsMiddleware&#x27;]
+
+
+
+Traceback (most recent call last):
+  File "/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/http/request.py", line 150, in get_host
+    raise DisallowedHost(msg)
+
+Exception Type: DisallowedHost at /
+Exception Value: Invalid HTTP_HOST header: &#x27;localhost&#x27;. You may need to add &#x27;localhost&#x27; to ALLOWED_HOSTS.
+</textarea>
+  <br><br>
+  <input type="submit" value="Share this traceback on a public website">
+  </div>
+</form>
+
+</div>
+
+
+<div id="requestinfo">
+  <h2>Request information</h2>
+
+
+  
+    <h3 id="user-info">USER</h3>
+    <p>[unable to retrieve the current user]</p>
+  
+
+  <h3 id="get-info">GET</h3>
+  
+    <p>No GET data</p>
+  
+
+  <h3 id="post-info">POST</h3>
+  
+    <p>No POST data</p>
+  
+
+  <h3 id="files-info">FILES</h3>
+  
+    <p>No FILES data</p>
+  
+
+  <h3 id="cookie-info">COOKIES</h3>
+  
+    <p>No cookie data</p>
+  
+
+  <h3 id="meta-info">META</h3>
+  <table class="req">
+    <thead>
+      <tr>
+        <th>Variable</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+        <tr>
+          <td>HTTP_ACCEPT</td>
+          <td class="code"><pre>&#x27;*/*&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>HTTP_HOST</td>
+          <td class="code"><pre>&#x27;localhost&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>HTTP_USER_AGENT</td>
+          <td class="code"><pre>&#x27;curl/7.81.0&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>PATH_INFO</td>
+          <td class="code"><pre>&#x27;/&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>QUERY_STRING</td>
+          <td class="code"><pre>&#x27;&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>RAW_URI</td>
+          <td class="code"><pre>&#x27;/&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>REMOTE_ADDR</td>
+          <td class="code"><pre>&#x27;&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>REQUEST_METHOD</td>
+          <td class="code"><pre>&#x27;GET&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SCRIPT_NAME</td>
+          <td class="code"><pre>&#x27;&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SERVER_NAME</td>
+          <td class="code"><pre>&#x27;localhost&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SERVER_PORT</td>
+          <td class="code"><pre>&#x27;80&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SERVER_PROTOCOL</td>
+          <td class="code"><pre>&#x27;HTTP/1.1&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SERVER_SOFTWARE</td>
+          <td class="code"><pre>&#x27;gunicorn/21.2.0&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>gunicorn.socket</td>
+          <td class="code"><pre>&lt;socket.socket fd=9, family=AddressFamily.AF_UNIX, type=SocketKind.SOCK_STREAM, proto=0, laddr=/run/gunicorn.sock&gt;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>wsgi.errors</td>
+          <td class="code"><pre>&lt;gunicorn.http.wsgi.WSGIErrorsWrapper object at 0x7fd9b27ac4c0&gt;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>wsgi.file_wrapper</td>
+          <td class="code"><pre>&lt;class &#x27;gunicorn.http.wsgi.FileWrapper&#x27;&gt;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>wsgi.input</td>
+          <td class="code"><pre>&lt;gunicorn.http.body.Body object at 0x7fd9b27aca30&gt;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>wsgi.input_terminated</td>
+          <td class="code"><pre>True</pre></td>
+        </tr>
+      
+        <tr>
+          <td>wsgi.multiprocess</td>
+          <td class="code"><pre>True</pre></td>
+        </tr>
+      
+        <tr>
+          <td>wsgi.multithread</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>wsgi.run_once</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>wsgi.url_scheme</td>
+          <td class="code"><pre>&#x27;http&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>wsgi.version</td>
+          <td class="code"><pre>(1, 0)</pre></td>
+        </tr>
+      
+    </tbody>
+  </table>
+
+
+  <h3 id="settings-info">Settings</h3>
+  <h4>Using settings module <code>myprojects.settings</code></h4>
+  <table class="req">
+    <thead>
+      <tr>
+        <th>Setting</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+        <tr>
+          <td>ABSOLUTE_URL_OVERRIDES</td>
+          <td class="code"><pre>{}</pre></td>
+        </tr>
+      
+        <tr>
+          <td>ADMINS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>ALLOWED_HOSTS</td>
+          <td class="code"><pre>[&#x27;10.0.2.15&#x27;]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>APPEND_SLASH</td>
+          <td class="code"><pre>True</pre></td>
+        </tr>
+      
+        <tr>
+          <td>AUTHENTICATION_BACKENDS</td>
+          <td class="code"><pre>[&#x27;django.contrib.auth.backends.ModelBackend&#x27;]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>AUTH_PASSWORD_VALIDATORS</td>
+          <td class="code"><pre>&#x27;********************&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>AUTH_USER_MODEL</td>
+          <td class="code"><pre>&#x27;auth.User&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>BASE_DIR</td>
+          <td class="code"><pre>PosixPath(&#x27;/home/vks/myprojectdir&#x27;)</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CACHES</td>
+          <td class="code"><pre>{&#x27;default&#x27;: {&#x27;BACKEND&#x27;: &#x27;django.core.cache.backends.locmem.LocMemCache&#x27;}}</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CACHE_MIDDLEWARE_ALIAS</td>
+          <td class="code"><pre>&#x27;default&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CACHE_MIDDLEWARE_KEY_PREFIX</td>
+          <td class="code"><pre>&#x27;********************&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CACHE_MIDDLEWARE_SECONDS</td>
+          <td class="code"><pre>600</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_COOKIE_AGE</td>
+          <td class="code"><pre>31449600</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_COOKIE_DOMAIN</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_COOKIE_HTTPONLY</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_COOKIE_MASKED</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_COOKIE_NAME</td>
+          <td class="code"><pre>&#x27;csrftoken&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_COOKIE_PATH</td>
+          <td class="code"><pre>&#x27;/&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_COOKIE_SAMESITE</td>
+          <td class="code"><pre>&#x27;Lax&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_COOKIE_SECURE</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_FAILURE_VIEW</td>
+          <td class="code"><pre>&#x27;django.views.csrf.csrf_failure&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_HEADER_NAME</td>
+          <td class="code"><pre>&#x27;HTTP_X_CSRFTOKEN&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_TRUSTED_ORIGINS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>CSRF_USE_SESSIONS</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DATABASES</td>
+          <td class="code"><pre>{&#x27;default&#x27;: {&#x27;ATOMIC_REQUESTS&#x27;: False,
+             &#x27;AUTOCOMMIT&#x27;: True,
+             &#x27;CONN_HEALTH_CHECKS&#x27;: False,
+             &#x27;CONN_MAX_AGE&#x27;: 0,
+             &#x27;ENGINE&#x27;: &#x27;django.db.backends.postgresql_psycopg2&#x27;,
+             &#x27;HOST&#x27;: &#x27;localhost&#x27;,
+             &#x27;NAME&#x27;: &#x27;myproject&#x27;,
+             &#x27;OPTIONS&#x27;: {},
+             &#x27;PASSWORD&#x27;: &#x27;********************&#x27;,
+             &#x27;PORT&#x27;: &#x27;&#x27;,
+             &#x27;TEST&#x27;: {&#x27;CHARSET&#x27;: None,
+                      &#x27;COLLATION&#x27;: None,
+                      &#x27;MIGRATE&#x27;: True,
+                      &#x27;MIRROR&#x27;: None,
+                      &#x27;NAME&#x27;: None},
+             &#x27;TIME_ZONE&#x27;: None,
+             &#x27;USER&#x27;: &#x27;myprojectuser&#x27;}}</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DATABASE_ROUTERS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DATA_UPLOAD_MAX_MEMORY_SIZE</td>
+          <td class="code"><pre>2621440</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DATA_UPLOAD_MAX_NUMBER_FIELDS</td>
+          <td class="code"><pre>1000</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DATA_UPLOAD_MAX_NUMBER_FILES</td>
+          <td class="code"><pre>100</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DATETIME_FORMAT</td>
+          <td class="code"><pre>&#x27;N j, Y, P&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DATETIME_INPUT_FORMATS</td>
+          <td class="code"><pre>[&#x27;%Y-%m-%d %H:%M:%S&#x27;,
+ &#x27;%Y-%m-%d %H:%M:%S.%f&#x27;,
+ &#x27;%Y-%m-%d %H:%M&#x27;,
+ &#x27;%m/%d/%Y %H:%M:%S&#x27;,
+ &#x27;%m/%d/%Y %H:%M:%S.%f&#x27;,
+ &#x27;%m/%d/%Y %H:%M&#x27;,
+ &#x27;%m/%d/%y %H:%M:%S&#x27;,
+ &#x27;%m/%d/%y %H:%M:%S.%f&#x27;,
+ &#x27;%m/%d/%y %H:%M&#x27;]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DATE_FORMAT</td>
+          <td class="code"><pre>&#x27;N j, Y&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DATE_INPUT_FORMATS</td>
+          <td class="code"><pre>[&#x27;%Y-%m-%d&#x27;,
+ &#x27;%m/%d/%Y&#x27;,
+ &#x27;%m/%d/%y&#x27;,
+ &#x27;%b %d %Y&#x27;,
+ &#x27;%b %d, %Y&#x27;,
+ &#x27;%d %b %Y&#x27;,
+ &#x27;%d %b, %Y&#x27;,
+ &#x27;%B %d %Y&#x27;,
+ &#x27;%B %d, %Y&#x27;,
+ &#x27;%d %B %Y&#x27;,
+ &#x27;%d %B, %Y&#x27;]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DEBUG</td>
+          <td class="code"><pre>True</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DEBUG_PROPAGATE_EXCEPTIONS</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DECIMAL_SEPARATOR</td>
+          <td class="code"><pre>&#x27;.&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DEFAULT_AUTO_FIELD</td>
+          <td class="code"><pre>&#x27;django.db.models.BigAutoField&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DEFAULT_CHARSET</td>
+          <td class="code"><pre>&#x27;utf-8&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DEFAULT_EXCEPTION_REPORTER</td>
+          <td class="code"><pre>&#x27;django.views.debug.ExceptionReporter&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DEFAULT_EXCEPTION_REPORTER_FILTER</td>
+          <td class="code"><pre>&#x27;django.views.debug.SafeExceptionReporterFilter&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DEFAULT_FILE_STORAGE</td>
+          <td class="code"><pre>&#x27;django.core.files.storage.FileSystemStorage&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DEFAULT_FROM_EMAIL</td>
+          <td class="code"><pre>&#x27;webmaster@localhost&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DEFAULT_INDEX_TABLESPACE</td>
+          <td class="code"><pre>&#x27;&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DEFAULT_TABLESPACE</td>
+          <td class="code"><pre>&#x27;&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>DISALLOWED_USER_AGENTS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_BACKEND</td>
+          <td class="code"><pre>&#x27;django.core.mail.backends.smtp.EmailBackend&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_HOST</td>
+          <td class="code"><pre>&#x27;localhost&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_HOST_PASSWORD</td>
+          <td class="code"><pre>&#x27;********************&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_HOST_USER</td>
+          <td class="code"><pre>&#x27;&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_PORT</td>
+          <td class="code"><pre>25</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_SSL_CERTFILE</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_SSL_KEYFILE</td>
+          <td class="code"><pre>&#x27;********************&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_SUBJECT_PREFIX</td>
+          <td class="code"><pre>&#x27;[Django] &#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_TIMEOUT</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_USE_LOCALTIME</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_USE_SSL</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>EMAIL_USE_TLS</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>FILE_UPLOAD_DIRECTORY_PERMISSIONS</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>FILE_UPLOAD_HANDLERS</td>
+          <td class="code"><pre>[&#x27;django.core.files.uploadhandler.MemoryFileUploadHandler&#x27;,
+ &#x27;django.core.files.uploadhandler.TemporaryFileUploadHandler&#x27;]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>FILE_UPLOAD_MAX_MEMORY_SIZE</td>
+          <td class="code"><pre>2621440</pre></td>
+        </tr>
+      
+        <tr>
+          <td>FILE_UPLOAD_PERMISSIONS</td>
+          <td class="code"><pre>420</pre></td>
+        </tr>
+      
+        <tr>
+          <td>FILE_UPLOAD_TEMP_DIR</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>FIRST_DAY_OF_WEEK</td>
+          <td class="code"><pre>0</pre></td>
+        </tr>
+      
+        <tr>
+          <td>FIXTURE_DIRS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>FORCE_SCRIPT_NAME</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>FORMAT_MODULE_PATH</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>FORM_RENDERER</td>
+          <td class="code"><pre>&#x27;django.forms.renderers.DjangoTemplates&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>IGNORABLE_404_URLS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>INSTALLED_APPS</td>
+          <td class="code"><pre>[&#x27;django.contrib.admin&#x27;,
+ &#x27;django.contrib.auth&#x27;,
+ &#x27;django.contrib.contenttypes&#x27;,
+ &#x27;django.contrib.sessions&#x27;,
+ &#x27;django.contrib.messages&#x27;,
+ &#x27;django.contrib.staticfiles&#x27;]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>INTERNAL_IPS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LANGUAGES</td>
+          <td class="code"><pre>[(&#x27;af&#x27;, &#x27;Afrikaans&#x27;),
+ (&#x27;ar&#x27;, &#x27;Arabic&#x27;),
+ (&#x27;ar-dz&#x27;, &#x27;Algerian Arabic&#x27;),
+ (&#x27;ast&#x27;, &#x27;Asturian&#x27;),
+ (&#x27;az&#x27;, &#x27;Azerbaijani&#x27;),
+ (&#x27;bg&#x27;, &#x27;Bulgarian&#x27;),
+ (&#x27;be&#x27;, &#x27;Belarusian&#x27;),
+ (&#x27;bn&#x27;, &#x27;Bengali&#x27;),
+ (&#x27;br&#x27;, &#x27;Breton&#x27;),
+ (&#x27;bs&#x27;, &#x27;Bosnian&#x27;),
+ (&#x27;ca&#x27;, &#x27;Catalan&#x27;),
+ (&#x27;ckb&#x27;, &#x27;Central Kurdish (Sorani)&#x27;),
+ (&#x27;cs&#x27;, &#x27;Czech&#x27;),
+ (&#x27;cy&#x27;, &#x27;Welsh&#x27;),
+ (&#x27;da&#x27;, &#x27;Danish&#x27;),
+ (&#x27;de&#x27;, &#x27;German&#x27;),
+ (&#x27;dsb&#x27;, &#x27;Lower Sorbian&#x27;),
+ (&#x27;el&#x27;, &#x27;Greek&#x27;),
+ (&#x27;en&#x27;, &#x27;English&#x27;),
+ (&#x27;en-au&#x27;, &#x27;Australian English&#x27;),
+ (&#x27;en-gb&#x27;, &#x27;British English&#x27;),
+ (&#x27;eo&#x27;, &#x27;Esperanto&#x27;),
+ (&#x27;es&#x27;, &#x27;Spanish&#x27;),
+ (&#x27;es-ar&#x27;, &#x27;Argentinian Spanish&#x27;),
+ (&#x27;es-co&#x27;, &#x27;Colombian Spanish&#x27;),
+ (&#x27;es-mx&#x27;, &#x27;Mexican Spanish&#x27;),
+ (&#x27;es-ni&#x27;, &#x27;Nicaraguan Spanish&#x27;),
+ (&#x27;es-ve&#x27;, &#x27;Venezuelan Spanish&#x27;),
+ (&#x27;et&#x27;, &#x27;Estonian&#x27;),
+ (&#x27;eu&#x27;, &#x27;Basque&#x27;),
+ (&#x27;fa&#x27;, &#x27;Persian&#x27;),
+ (&#x27;fi&#x27;, &#x27;Finnish&#x27;),
+ (&#x27;fr&#x27;, &#x27;French&#x27;),
+ (&#x27;fy&#x27;, &#x27;Frisian&#x27;),
+ (&#x27;ga&#x27;, &#x27;Irish&#x27;),
+ (&#x27;gd&#x27;, &#x27;Scottish Gaelic&#x27;),
+ (&#x27;gl&#x27;, &#x27;Galician&#x27;),
+ (&#x27;he&#x27;, &#x27;Hebrew&#x27;),
+ (&#x27;hi&#x27;, &#x27;Hindi&#x27;),
+ (&#x27;hr&#x27;, &#x27;Croatian&#x27;),
+ (&#x27;hsb&#x27;, &#x27;Upper Sorbian&#x27;),
+ (&#x27;hu&#x27;, &#x27;Hungarian&#x27;),
+ (&#x27;hy&#x27;, &#x27;Armenian&#x27;),
+ (&#x27;ia&#x27;, &#x27;Interlingua&#x27;),
+ (&#x27;id&#x27;, &#x27;Indonesian&#x27;),
+ (&#x27;ig&#x27;, &#x27;Igbo&#x27;),
+ (&#x27;io&#x27;, &#x27;Ido&#x27;),
+ (&#x27;is&#x27;, &#x27;Icelandic&#x27;),
+ (&#x27;it&#x27;, &#x27;Italian&#x27;),
+ (&#x27;ja&#x27;, &#x27;Japanese&#x27;),
+ (&#x27;ka&#x27;, &#x27;Georgian&#x27;),
+ (&#x27;kab&#x27;, &#x27;Kabyle&#x27;),
+ (&#x27;kk&#x27;, &#x27;Kazakh&#x27;),
+ (&#x27;km&#x27;, &#x27;Khmer&#x27;),
+ (&#x27;kn&#x27;, &#x27;Kannada&#x27;),
+ (&#x27;ko&#x27;, &#x27;Korean&#x27;),
+ (&#x27;ky&#x27;, &#x27;Kyrgyz&#x27;),
+ (&#x27;lb&#x27;, &#x27;Luxembourgish&#x27;),
+ (&#x27;lt&#x27;, &#x27;Lithuanian&#x27;),
+ (&#x27;lv&#x27;, &#x27;Latvian&#x27;),
+ (&#x27;mk&#x27;, &#x27;Macedonian&#x27;),
+ (&#x27;ml&#x27;, &#x27;Malayalam&#x27;),
+ (&#x27;mn&#x27;, &#x27;Mongolian&#x27;),
+ (&#x27;mr&#x27;, &#x27;Marathi&#x27;),
+ (&#x27;ms&#x27;, &#x27;Malay&#x27;),
+ (&#x27;my&#x27;, &#x27;Burmese&#x27;),
+ (&#x27;nb&#x27;, &#x27;Norwegian Bokmål&#x27;),
+ (&#x27;ne&#x27;, &#x27;Nepali&#x27;),
+ (&#x27;nl&#x27;, &#x27;Dutch&#x27;),
+ (&#x27;nn&#x27;, &#x27;Norwegian Nynorsk&#x27;),
+ (&#x27;os&#x27;, &#x27;Ossetic&#x27;),
+ (&#x27;pa&#x27;, &#x27;Punjabi&#x27;),
+ (&#x27;pl&#x27;, &#x27;Polish&#x27;),
+ (&#x27;pt&#x27;, &#x27;Portuguese&#x27;),
+ (&#x27;pt-br&#x27;, &#x27;Brazilian Portuguese&#x27;),
+ (&#x27;ro&#x27;, &#x27;Romanian&#x27;),
+ (&#x27;ru&#x27;, &#x27;Russian&#x27;),
+ (&#x27;sk&#x27;, &#x27;Slovak&#x27;),
+ (&#x27;sl&#x27;, &#x27;Slovenian&#x27;),
+ (&#x27;sq&#x27;, &#x27;Albanian&#x27;),
+ (&#x27;sr&#x27;, &#x27;Serbian&#x27;),
+ (&#x27;sr-latn&#x27;, &#x27;Serbian Latin&#x27;),
+ (&#x27;sv&#x27;, &#x27;Swedish&#x27;),
+ (&#x27;sw&#x27;, &#x27;Swahili&#x27;),
+ (&#x27;ta&#x27;, &#x27;Tamil&#x27;),
+ (&#x27;te&#x27;, &#x27;Telugu&#x27;),
+ (&#x27;tg&#x27;, &#x27;Tajik&#x27;),
+ (&#x27;th&#x27;, &#x27;Thai&#x27;),
+ (&#x27;tk&#x27;, &#x27;Turkmen&#x27;),
+ (&#x27;tr&#x27;, &#x27;Turkish&#x27;),
+ (&#x27;tt&#x27;, &#x27;Tatar&#x27;),
+ (&#x27;udm&#x27;, &#x27;Udmurt&#x27;),
+ (&#x27;uk&#x27;, &#x27;Ukrainian&#x27;),
+ (&#x27;ur&#x27;, &#x27;Urdu&#x27;),
+ (&#x27;uz&#x27;, &#x27;Uzbek&#x27;),
+ (&#x27;vi&#x27;, &#x27;Vietnamese&#x27;),
+ (&#x27;zh-hans&#x27;, &#x27;Simplified Chinese&#x27;),
+ (&#x27;zh-hant&#x27;, &#x27;Traditional Chinese&#x27;)]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LANGUAGES_BIDI</td>
+          <td class="code"><pre>[&#x27;he&#x27;, &#x27;ar&#x27;, &#x27;ar-dz&#x27;, &#x27;ckb&#x27;, &#x27;fa&#x27;, &#x27;ur&#x27;]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LANGUAGE_CODE</td>
+          <td class="code"><pre>&#x27;en-us&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LANGUAGE_COOKIE_AGE</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LANGUAGE_COOKIE_DOMAIN</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LANGUAGE_COOKIE_HTTPONLY</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LANGUAGE_COOKIE_NAME</td>
+          <td class="code"><pre>&#x27;django_language&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LANGUAGE_COOKIE_PATH</td>
+          <td class="code"><pre>&#x27;/&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LANGUAGE_COOKIE_SAMESITE</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LANGUAGE_COOKIE_SECURE</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LOCALE_PATHS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LOGGING</td>
+          <td class="code"><pre>{}</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LOGGING_CONFIG</td>
+          <td class="code"><pre>&#x27;logging.config.dictConfig&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LOGIN_REDIRECT_URL</td>
+          <td class="code"><pre>&#x27;/accounts/profile/&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LOGIN_URL</td>
+          <td class="code"><pre>&#x27;/accounts/login/&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>LOGOUT_REDIRECT_URL</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>MANAGERS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>MEDIA_ROOT</td>
+          <td class="code"><pre>&#x27;&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>MEDIA_URL</td>
+          <td class="code"><pre>&#x27;/&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>MESSAGE_STORAGE</td>
+          <td class="code"><pre>&#x27;django.contrib.messages.storage.fallback.FallbackStorage&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>MIDDLEWARE</td>
+          <td class="code"><pre>[&#x27;django.middleware.security.SecurityMiddleware&#x27;,
+ &#x27;django.contrib.sessions.middleware.SessionMiddleware&#x27;,
+ &#x27;django.middleware.common.CommonMiddleware&#x27;,
+ &#x27;django.middleware.csrf.CsrfViewMiddleware&#x27;,
+ &#x27;django.contrib.auth.middleware.AuthenticationMiddleware&#x27;,
+ &#x27;django.contrib.messages.middleware.MessageMiddleware&#x27;,
+ &#x27;django.middleware.clickjacking.XFrameOptionsMiddleware&#x27;]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>MIGRATION_MODULES</td>
+          <td class="code"><pre>{}</pre></td>
+        </tr>
+      
+        <tr>
+          <td>MONTH_DAY_FORMAT</td>
+          <td class="code"><pre>&#x27;F j&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>NUMBER_GROUPING</td>
+          <td class="code"><pre>0</pre></td>
+        </tr>
+      
+        <tr>
+          <td>PASSWORD_HASHERS</td>
+          <td class="code"><pre>&#x27;********************&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>PASSWORD_RESET_TIMEOUT</td>
+          <td class="code"><pre>&#x27;********************&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>PREPEND_WWW</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>ROOT_URLCONF</td>
+          <td class="code"><pre>&#x27;myprojects.urls&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECRET_KEY</td>
+          <td class="code"><pre>&#x27;********************&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECRET_KEY_FALLBACKS</td>
+          <td class="code"><pre>&#x27;********************&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECURE_CONTENT_TYPE_NOSNIFF</td>
+          <td class="code"><pre>True</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECURE_CROSS_ORIGIN_OPENER_POLICY</td>
+          <td class="code"><pre>&#x27;same-origin&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECURE_HSTS_INCLUDE_SUBDOMAINS</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECURE_HSTS_PRELOAD</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECURE_HSTS_SECONDS</td>
+          <td class="code"><pre>0</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECURE_PROXY_SSL_HEADER</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECURE_REDIRECT_EXEMPT</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECURE_REFERRER_POLICY</td>
+          <td class="code"><pre>&#x27;same-origin&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECURE_SSL_HOST</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SECURE_SSL_REDIRECT</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SERVER_EMAIL</td>
+          <td class="code"><pre>&#x27;root@localhost&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_CACHE_ALIAS</td>
+          <td class="code"><pre>&#x27;default&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_COOKIE_AGE</td>
+          <td class="code"><pre>1209600</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_COOKIE_DOMAIN</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_COOKIE_HTTPONLY</td>
+          <td class="code"><pre>True</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_COOKIE_NAME</td>
+          <td class="code"><pre>&#x27;sessionid&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_COOKIE_PATH</td>
+          <td class="code"><pre>&#x27;/&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_COOKIE_SAMESITE</td>
+          <td class="code"><pre>&#x27;Lax&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_COOKIE_SECURE</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_ENGINE</td>
+          <td class="code"><pre>&#x27;django.contrib.sessions.backends.db&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_EXPIRE_AT_BROWSER_CLOSE</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_FILE_PATH</td>
+          <td class="code"><pre>None</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_SAVE_EVERY_REQUEST</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SESSION_SERIALIZER</td>
+          <td class="code"><pre>&#x27;django.contrib.sessions.serializers.JSONSerializer&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SETTINGS_MODULE</td>
+          <td class="code"><pre>&#x27;myprojects.settings&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SHORT_DATETIME_FORMAT</td>
+          <td class="code"><pre>&#x27;m/d/Y P&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SHORT_DATE_FORMAT</td>
+          <td class="code"><pre>&#x27;m/d/Y&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SIGNING_BACKEND</td>
+          <td class="code"><pre>&#x27;django.core.signing.TimestampSigner&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>SILENCED_SYSTEM_CHECKS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>STATICFILES_DIRS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>STATICFILES_FINDERS</td>
+          <td class="code"><pre>[&#x27;django.contrib.staticfiles.finders.FileSystemFinder&#x27;,
+ &#x27;django.contrib.staticfiles.finders.AppDirectoriesFinder&#x27;]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>STATICFILES_STORAGE</td>
+          <td class="code"><pre>&#x27;django.contrib.staticfiles.storage.StaticFilesStorage&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>STATIC_ROOT</td>
+          <td class="code"><pre>&#x27;/home/vks/myprojectdir/static/&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>STATIC_URL</td>
+          <td class="code"><pre>&#x27;/static/&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>STORAGES</td>
+          <td class="code"><pre>{&#x27;default&#x27;: {&#x27;BACKEND&#x27;: &#x27;django.core.files.storage.FileSystemStorage&#x27;},
+ &#x27;staticfiles&#x27;: {&#x27;BACKEND&#x27;: &#x27;django.contrib.staticfiles.storage.StaticFilesStorage&#x27;}}</pre></td>
+        </tr>
+      
+        <tr>
+          <td>TEMPLATES</td>
+          <td class="code"><pre>[{&#x27;APP_DIRS&#x27;: True,
+  &#x27;BACKEND&#x27;: &#x27;django.template.backends.django.DjangoTemplates&#x27;,
+  &#x27;DIRS&#x27;: [],
+  &#x27;OPTIONS&#x27;: {&#x27;context_processors&#x27;: [&#x27;django.template.context_processors.debug&#x27;,
+                                     &#x27;django.template.context_processors.request&#x27;,
+                                     &#x27;django.contrib.auth.context_processors.auth&#x27;,
+                                     &#x27;django.contrib.messages.context_processors.messages&#x27;]}}]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>TEST_NON_SERIALIZED_APPS</td>
+          <td class="code"><pre>[]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>TEST_RUNNER</td>
+          <td class="code"><pre>&#x27;django.test.runner.DiscoverRunner&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>THOUSAND_SEPARATOR</td>
+          <td class="code"><pre>&#x27;,&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>TIME_FORMAT</td>
+          <td class="code"><pre>&#x27;P&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>TIME_INPUT_FORMATS</td>
+          <td class="code"><pre>[&#x27;%H:%M:%S&#x27;, &#x27;%H:%M:%S.%f&#x27;, &#x27;%H:%M&#x27;]</pre></td>
+        </tr>
+      
+        <tr>
+          <td>TIME_ZONE</td>
+          <td class="code"><pre>&#x27;UTC&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>USE_DEPRECATED_PYTZ</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>USE_I18N</td>
+          <td class="code"><pre>True</pre></td>
+        </tr>
+      
+        <tr>
+          <td>USE_L10N</td>
+          <td class="code"><pre>True</pre></td>
+        </tr>
+      
+        <tr>
+          <td>USE_THOUSAND_SEPARATOR</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>USE_TZ</td>
+          <td class="code"><pre>True</pre></td>
+        </tr>
+      
+        <tr>
+          <td>USE_X_FORWARDED_HOST</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>USE_X_FORWARDED_PORT</td>
+          <td class="code"><pre>False</pre></td>
+        </tr>
+      
+        <tr>
+          <td>WSGI_APPLICATION</td>
+          <td class="code"><pre>&#x27;myprojects.wsgi.application&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>X_FRAME_OPTIONS</td>
+          <td class="code"><pre>&#x27;DENY&#x27;</pre></td>
+        </tr>
+      
+        <tr>
+          <td>YEAR_MONTH_FORMAT</td>
+          <td class="code"><pre>&#x27;F Y&#x27;</pre></td>
+        </tr>
+      
+    </tbody>
+  </table>
+
+</div>
+
+  <div id="explanation">
+    <p>
+      You’re seeing this error because you have <code>DEBUG = True</code> in your
+      Django settings file. Change that to <code>False</code>, and Django will
+      display a standard page generated by the handler for this status code.
+    </p>
+  </div>
+
+</body>
+</html>
+vks@VarunVM:/etc/systemd/system$ sudo systemctl status gunicorn
+● gunicorn.service - gunicorn daemon
+     Loaded: loaded (/etc/systemd/system/gunicorn.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2023-11-19 16:45:14 IST; 4min 35s ago
+TriggeredBy: ● gunicorn.socket
+   Main PID: 14507 (gunicorn)
+      Tasks: 4 (limit: 2253)
+     Memory: 104.3M
+        CPU: 972ms
+     CGroup: /system.slice/gunicorn.service
+             ├─14507 /home/vks/myprojectdir/myprojectenv/bin/python3 /home/vks/myprojectdir/myprojectenv/bin/gunicorn --access-logf>
+             ├─14508 /home/vks/myprojectdir/myprojectenv/bin/python3 /home/vks/myprojectdir/myprojectenv/bin/gunicorn --access-logf>
+             ├─14509 /home/vks/myprojectdir/myprojectenv/bin/python3 /home/vks/myprojectdir/myprojectenv/bin/gunicorn --access-logf>
+             └─14510 /home/vks/myprojectdir/myprojectenv/bin/python3 /home/vks/myprojectdir/myprojectenv/bin/gunicorn --access-logf>
+
+Nov 19 16:48:58 VarunVM gunicorn[14508]:     response = get_response(request)
+Nov 19 16:48:58 VarunVM gunicorn[14508]:   File "/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/utils/depr>
+Nov 19 16:48:58 VarunVM gunicorn[14508]:     response = self.process_request(request)
+Nov 19 16:48:58 VarunVM gunicorn[14508]:   File "/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/middleware>
+Nov 19 16:48:58 VarunVM gunicorn[14508]:     host = request.get_host()
+Nov 19 16:48:58 VarunVM gunicorn[14508]:   File "/home/vks/myprojectdir/myprojectenv/lib/python3.10/site-packages/django/http/reque>
+Nov 19 16:48:58 VarunVM gunicorn[14508]:     raise DisallowedHost(msg)
+Nov 19 16:48:58 VarunVM gunicorn[14508]: django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'localhost'. You may need>
+Nov 19 16:48:58 VarunVM gunicorn[14508]: Bad Request: /
+Nov 19 16:48:58 VarunVM gunicorn[14508]:  - - [19/Nov/2023:11:18:58 +0000] "GET / HTTP/1.1" 400 56733 "-" "curl/7.81.0"
+
+vks@VarunVM:/etc/systemd/system$ sudo nano /etc/nginx/sites-available/myproject
+vks@VarunVM:/etc/systemd/system$ sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
+vks@VarunVM:/etc/systemd/system$ sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+vks@VarunVM:/etc/systemd/system$ sudo systemctl restart nginx
+vks@VarunVM:/etc/systemd/system$ sudo ufw delete allow 8000
+sudo ufw allow 'Nginx Full'
+Rule deleted
+Rule deleted (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+

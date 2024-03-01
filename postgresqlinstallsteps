@@ -1,0 +1,38 @@
+YT link: https://www.youtube.com/watch?v=tducLYZzElo
+
+In Web
+email: vks@gmail.com
+pwd: vks@gmail.com
+
+In Desktop
+Name: localhost
+hostname: 10.0.2.15
+post: 5432
+Username: postgres
+pwd: postgres@123
+
+To change user password:
+vks@VarunVM:~$ sudo -i -u postgres
+postgres@VarunVM:~$ psql
+postgres=# psql -U postgres
+postgres-# \password
+Enter new password for user "postgres": 
+Enter it again:
+link1:https://stackoverflow.com/questions/55038942/fatal-password-authentication-failed-for-user-postgres-postgresql-11-with-pg
+
+
+
+
+
+
+
+
+sudo service postgresql restart
+sudo netstat -lntp | grep postgres
+sudo ufw status
+sudo ufw allow 5432
+sudo service postgresql status
+sudo tail -f /var/log/postgresql/postgresql-16-main.log
+sudo tail -f /var/log/postgresql/postgresql-15-main.log
+
+

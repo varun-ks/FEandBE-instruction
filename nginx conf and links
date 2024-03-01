@@ -1,0 +1,286 @@
+sudo nano /etc/systemd/system/gunicorn.socket
+
+  GNU nano 6.2           /etc/systemd/system/gunicorn.socket                    
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+
+[Install]
+WantedBy=sockets.target
+
+sudo nano /etc/systemd/system/gunicorn.service
+
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=vks
+Group=www-data
+WorkingDirectory=/home/vks/deploy_backend
+ExecStart=/home/vks/deploy_backend/backendenv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          mainRegisterForm.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+Nginx conf -> Inside sites available 
+sudo nano /etc/nginx/sites-available/myproject
+sudo nano myproject.conf
+
+server {
+    listen 8080;
+    server_name 10.0.2.15;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/vks/myprojectdir;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}
+
+server {
+        listen 800;
+        listen [::]:800;
+
+        root /var/www/reactappdemo/demo/build;
+}
+
+#deploy_backend
+
+server {
+    listen 8111;
+    server_name 10.0.2.15;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        #add_header Access-Control-Allow-Origin "http://10.0.2.15:3001";
+        if ($request_method = OPTIONS ) {
+         add_header "Access-Control-Allow-Origin"  *;
+         add_header "Access-Control-Allow-Methods" "GET, POST, OPTIONS, HEAD";
+         add_header "Access-Control-Allow-Headers" "Authorization, Origin, X-Re>
+         return 200;
+    }
+        if ($request_method = 'POST') {
+         add_header 'Access-Control-Allow-Origin' '*';
+         add_header 'Access-Control-Allow-Credentials' 'true';
+         
+         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+         add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Ali>
+     }
+        root /home/vks/deploy_backend;
+    }
+
+    location / {
+        include proxy_params;
+        #add_header Access-Control-Allow-Origin "http://10.0.2.15:3001";
+        if ($request_method = OPTIONS ) {
+         add_header "Access-Control-Allow-Origin"  *;
+         add_header "Access-Control-Allow-Methods" "GET, POST, OPTIONS, HEAD";
+         add_header "Access-Control-Allow-Headers" "Authorization, Origin, X-Re>
+         return 200;
+    }
+        if ($request_method = 'POST') {
+         add_header 'Access-Control-Allow-Origin' '*';
+         add_header 'Access-Control-Allow-Credentials' 'true';
+         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+         add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Ali>
+     }
+
+
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}
+
+
+#deploy_frontend
+
+server {
+        listen 3001;
+        listen [::]:3001;
+
+        root /var/www/deploy_frontend/deploy_frontend/build;
+        index index.html;
+
+	location / {
+                root /var/www/deploy_frontend/deploy_frontend/build; 
+                try_files $uri $uri/ /index.html;
+  }
+
+
+#       location /src/ {
+        #       root /var/www/deploy_frontend/deploy_frontend;
+        #       index index.js;
+
+}
+
+
+         
+---------------------------------------------------------------------------------------------------------------------------         
+         
+         
+         
+nginx-links: https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu
+https://www.digitalocean.com/community/tutorials/nginx-location-directive
+https://create-react-app.dev/docs/running-tests/
+https://www.nginx.com/resources/wiki/start/topics/tutorials/config_pitfalls/#root-inside-location-block
+https://create-react-app.dev/docs/deployment/#building-for-relative-paths
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSMissingAllowOrigin
+https://serverfault.com/questions/162429/how-do-i-add-access-control-allow-origin-in-nginx
+         
+---------------------------------------------------------------------------------------------------------------------------- 
+        
+         
+vks@VarunVM:/etc$ sudo nano sudoers
+
+#
+# This file MUST be edited with the 'visudo' command as root.
+#
+# Please consider adding local content in /etc/sudoers.d/ instead of
+# directly modifying this file.
+#
+# See the man page for details on how to write a sudoers file.
+#
+Defaults        env_reset
+Defaults        mail_badpass
+Defaults        secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:>
+Defaults        use_pty
+
+# This preserves proxy settings from user environments of root
+# equivalent users (group sudo)
+#Defaults:%sudo env_keep += "http_proxy https_proxy ftp_proxy all_proxy no_prox>
+
+# This allows running arbitrary commands, but so does ALL, and it means
+# different sudoers have their choice of editor respected.
+#Defaults:%sudo env_keep += "EDITOR"
+# Completely harmless preservation of a user preference.
+#Defaults:%sudo env_keep += "GREP_COLOR"
+
+# While you shouldn't normally run git as root, you need to with etckeeper
+#Defaults:%sudo env_keep += "GIT_AUTHOR_* GIT_COMMITTER_*"
+
+# Per-user preferences; root won't have sensible values for them.
+#Defaults:%sudo env_keep += "EMAIL DEBEMAIL DEBFULLNAME"
+
+# "sudo scp" or "sudo rsync" should be able to use your SSH agent.
+#Defaults:%sudo env_keep += "SSH_AGENT_PID SSH_AUTH_SOCK"
+
+# Ditto for GPG agent
+#Defaults:%sudo env_keep += "GPG_AGENT_INFO"
+
+# Host alias specification
+
+# User alias specification
+
+# User privilege specification
+root    ALL=(ALL:ALL) ALL
+vboxuser ALL=(ALL:ALL) ALL
+vks ALL=(ALL:ALL) ALL
+
+# Members of the admin group may gain root privileges
+%admin ALL=(ALL) ALL
+
+# Allow members of group sudo to execute any command
+%sudo   ALL=(ALL:ALL) ALL
+
+# See sudoers(5) for more information on "@include" directives:
+
+@includedir /etc/sudoers.d
+
+-----------------------------------------------------------------------------------------------------
+
+
+/etc/postgresql/14/main
+
+#------------------------------------------------------------------------------
+# CONNECTIONS AND AUTHENTICATION
+#------------------------------------------------------------------------------
+
+# - Connection Settings -
+
+#listen_addresses = 'localhost'		# what IP address(es) to listen on;
+listen_addresses = '*'					# comma-separated list of addresses;
+					# defaults to 'localhost'; use '*' for all
+					# (change requires restart)
+port = 5432				# (change requires restart)
+max_connections = 100			# (change requires restart)
+#superuser_reserved_connections = 3	# (change requires restart)
+unix_socket_directories = '/var/run/postgresql'	# comma-separated list of directories
+					# (change requires restart)
+#unix_socket_group = ''			# (change requires restart)
+#unix_socket_permissions = 0777		# begin with 0 to use octal notation
+					# (change requires restart)
+#bonjour = off				# advertise server via Bonjour
+					# (change requires restart)
+#bonjour_name = ''			# defaults to the computer name
+					# (change requires restart)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+
+
