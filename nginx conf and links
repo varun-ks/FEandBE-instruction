@@ -231,6 +231,56 @@ unix_socket_directories = '/var/run/postgresql'	# comma-separated list of direct
 
 
 
+----------------------------------
+git
+-----------------------------------------------------
+
+
+vboxuser@VarunVM:~/Pictures$ git push
+fatal: The current branch main has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin main
+
+vboxuser@VarunVM:~/Pictures$ git push origin main
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+vboxuser@VarunVM:~/Pictures$ git remote -v
+origin	git@github.com:varun-ks/FEandBE-instruction.git (fetch)
+origin	git@github.com:varun-ks/FEandBE-instruction.git (push)
+
+## generate token setting -> developer -> personal token
+## for below proble and solution copy https link not ssh link and add token in https link and push
+vboxuser@VarunVM:~/Pictures$ git remote set-url origin https://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@github.com/varun-ks/FEandBE-instruction.git
+vboxuser@VarunVM:~/Pictures$ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+  (commit or discard the untracked or modified content in submodules)
+	modified:   deploy_backend (modified content, untracked content)
+	modified:   deploy_frontend/deploy_frontend (modified content)
+
+no changes added to commit (use "git add" and/or "git commit -a")
+vboxuser@VarunVM:~/Pictures$ git push
+fatal: The current branch main has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin main
+
+vboxuser@VarunVM:~/Pictures$ git push -u origin main
+Enumerating objects: 8620, done.
+Counting objects: 100% (8620/8620), done.
+Compressing objects: 100% (5449/5449), done.
+Writing objects: 100% (8620/8620), 15.81 MiB | 156.00 KiB/s, done.
+Total 8620 (delta 2083), reused 8620 (delta 2083), pack-reused 0
+remote: Resolving deltas: 100% (2083/2083), done.
+To https://github.com/varun-ks/FEandBE-instruction.git
+ * [new branch]      main -> main
+Branch 'main' set up to track remote branch 'main' from 'origin'.
 
 
 
